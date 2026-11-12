@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -63,11 +63,36 @@ h2{font-size:clamp(1.8rem,1.4rem + 3vw,3.6rem);font-weight:900;max-width:18ch}
 .join h2{margin-inline:auto;color:#fff}.join p{max-width:50ch;margin:1.25rem auto 2rem;color:#C9C4EE}
 .join .btn{border-color:var(--yl);box-shadow:4px 4px 0 var(--mg)}
 .fee .amt{font-family:var(--fd);font-weight:900;font-size:clamp(1.8rem,1.3rem + 2.5vw,3rem);letter-spacing:-.03em;margin:.5rem 0 1rem}.fee.top{background:var(--yl);color:var(--ink);border-color:var(--ink)}.fee.top p{color:var(--ink)}
+html.locked header,html.locked main,html.locked footer{display:none}html.locked,html.locked body{height:100%;overflow:hidden}
+.gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:calc(1.5rem + env(safe-area-inset-top,0px)) 1.5rem calc(1.5rem + env(safe-area-inset-bottom,0px));background:radial-gradient(circle at 15% 10%,#ff3d8155,transparent 45%),radial-gradient(circle at 90% 90%,#ffd23f44,transparent 45%),#15123A;color:#F2F0FF;overflow:auto}
+.gate[hidden]{display:none}
+.gc{width:min(440px,100%);text-align:center;border:3px solid var(--yl);border-radius:32px;padding:clamp(1.5rem,5vw,2.5rem);background:#1B1840;box-shadow:10px 10px 0 var(--mg)}
+.gc .st{display:inline-block;background:var(--yl);color:var(--ink);font-weight:800;font-size:.85rem;padding:.2em .9em;border-radius:999px;margin-bottom:1rem}
+.gc h2{font-size:clamp(1.5rem,1.2rem + 2vw,2.1rem);margin:0 auto .6rem;color:#fff}
+.gc p{margin:0 0 1.25rem;color:#C9C4EE}
+.gc input{width:100%;font:inherit;font-size:1.15rem;text-align:center;letter-spacing:.12em;padding:.85em 1em;border-radius:16px;border:2px solid #4a4590;background:#0F0D26;color:#fff;margin-bottom:1rem}
+.gc input:focus{outline:3px solid var(--mg);border-color:var(--mg)}
+.gc button{cursor:pointer;font:inherit;width:100%}
+.msg{min-height:1.6em;margin:1rem 0 0!important;color:#ff8fb5!important;font-weight:700}
+.left{margin:.25rem 0 0!important;font-size:.9rem}
+.shake{animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.fail h2{font-size:clamp(1.4rem,1.1rem + 2vw,2rem);line-height:1.25;letter-spacing:-.01em}
+@media(prefers-reduced-motion:reduce){.shake{animation:none}}
 footer{padding-block:2rem 3rem;color:var(--mu);font-size:.9rem;text-align:center}
 @media(prefers-reduced-motion:reduce){h1 .l{animation:none;opacity:1;transform:none}.tape div{animation:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<div class="gate" id="gate"><div class="gc" id="gc">
+<span class="st" id="st">Stage 1 of 3</span>
+<h2 id="gt">Restricted area</h2>
+<p id="gp">Sumanth Fans Association · RSS. Say the password to continue.</p>
+<form id="gf" autocomplete="off"><input id="gi" type="password" aria-label="Password" autocomplete="off" autocapitalize="none" spellcheck="false" required><button class="btn" type="submit">Unlock</button></form>
+<p class="msg" id="gm" role="alert"></p>
+<p class="left" id="gl">Attempts left: 3</p>
+</div>
+<div class="gc fail" id="gx" hidden><h2>We’re so sorry girls. We didn’t know that Sumanth was so handsome! Try again next time 😎</h2></div></div>
 <header><div class="wrap"><nav>
 <a class="logo" href="#top"><span>SFA</span>Sumanth Fans</a>
 <ul><li><a href="#why">Why us</a></li><li><a href="#team">Team</a></li><li><a href="#group">The group</a></li><li><a href="#join">Join</a></li></ul>
@@ -132,5 +157,19 @@ footer{padding-block:2rem 3rem;color:var(--mu);font-size:.9rem;text-align:center
 </main>
 
 <footer><div class="wrap">© 2026 Sumanth Fans Association · RSS<br><strong style="display:inline-block;margin-top:.6rem;font-family:var(--fd);font-size:1.1rem;color:var(--tx)">Made by Raj Virat</strong></div></footer>
+<script>
+(function(){
+var pw=['pitta','mabbu','2067'],s=0,left=3;
+var gate=document.getElementById('gate'),gc=document.getElementById('gc'),gx=document.getElementById('gx'),gf=document.getElementById('gf'),gi=document.getElementById('gi'),gm=document.getElementById('gm'),gl=document.getElementById('gl');
+var T=[['Restricted area','Sumanth Fans Association · RSS. Say the password to continue.','Password'],['Almost there','One more password and you’re closer.','Password'],['Final stage','Enter the 4-digit PIN.','PIN']];
+function render(){document.getElementById('st').textContent='Stage '+(s+1)+' of 3';document.getElementById('gt').textContent=T[s][0];document.getElementById('gp').textContent=T[s][1];gi.value='';gi.setAttribute('aria-label',T[s][2]);gi.placeholder=T[s][2];if(s===2){gi.setAttribute('inputmode','numeric');gi.maxLength=4}else{gi.removeAttribute('inputmode');gi.removeAttribute('maxlength')}gm.textContent='';gi.focus()}
+gf.addEventListener('submit',function(e){e.preventDefault();
+if(gi.value.trim().toLowerCase()===pw[s]){s++;if(s===3){document.documentElement.classList.remove('locked');gate.hidden=true;window.scrollTo(0,0)}else{render()}return}
+left--;
+if(left<=0){gc.hidden=true;gx.hidden=false;return}
+gm.textContent='Sorry girls, wrong '+(s===2?'pin':'password');gl.textContent='Attempts left: '+left;gi.value='';gc.classList.remove('shake');void gc.offsetWidth;gc.classList.add('shake');gi.focus()});
+gi.focus();
+})();
+</script>
 </body>
 </html>
